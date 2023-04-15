@@ -55,15 +55,35 @@ public class App {
 					articles.add(article);
 
 					System.out.printf("%d번째 글이 생성되었습니다.%n", articles.size());
-				} else if (command.equals("article list")) {
-					if (articles.size() == 0) {
-						System.out.println("게시물이 없습니다.");
+				} else if (command.startsWith("article list")) {
+					
+					String searchKeyword = command.substring("article list".length()).trim();
+					
+					System.out.println("검색어 : " + searchKeyword);
+					
+					List<Article> forListArticle = articles;
+					
+					if ( searchKeyword.length() > 0 ) {
+						forListArticle = new ArrayList<>();
+						
+						for ( Article article : articles ) {
+							if ( article.title.contains(searchKeyword) ) {
+								forListArticle.add(article);
+							}
+						}
+						
+						if (articles.size() == 0) {
+							System.out.println("검색결과가 존재하지 않습니다.");
+							continue;
+						}
 					}
 					System.out.println("  번호| 제목| 조회수");
-					for (int i = 0; i < articles.size(); i++) {
-						Article article = articles.get(i);
+					for (int i = 0; i < forListArticle.size(); i++) {
+						Article article = forListArticle.get(i);
 						System.out.printf("%4d %3s %4d%n", article.id, article.title, article.hit);
 					}
+					
+					
 				} else if (command.startsWith("article detail")) {
 					String[] commandBits = command.split(" ");
 
